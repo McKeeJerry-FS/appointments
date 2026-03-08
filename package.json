@@ -1,0 +1,12 @@
+{
+  "name": "appointments",
+  "version": "1.0.0",
+  "description": "project for build TDD app",
+  "license": "ISC",
+  "author": "Jerry McKee Jr",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  }
+}
