@@ -10,6 +10,10 @@ beforeEach(() => {
     container = document.createElement("div");
     document.body.replaceChildren(container);
 });
+const appointmentTimeOfDay = (startsAt) => {
+    const[h, m] = new Date(startsAt).toTimeString().split(":");
+    return `${h}:${m}`;
+}
 // 'DESCRIBE" defines a test suite, which is simply a set of tests with a given name.
 // The first argument is the name odf the unit you are testing, and the second argument is the name of function inside of which you define the test
 describe("Appointment", () => {
@@ -75,5 +79,17 @@ describe("AppointmentsByDay", () => {
             render(<AppointmentsByDay appointments={twoAppointments} />);
             const listChildren = document.querySelectorAll("li");
             expect(listChildren).toHaveLength(2);
+        });
+        // renders a human readable time for each appointment
+        it("renders a time for each appointment", () => {
+            const today = new Date();
+            const twoAppointments = [
+                { startsAt: today.setHours(9, 0) },
+                { startsAt: today.setHours(10, 0) },
+            ];
+            render(<AppointmentsByDay appointments={twoAppointments} />);
+            const listChildren = document.querySelectorAll("li");
+            expect(listChildren[0].textContent).toEqual("09:00");
+            expect(listChildren[1].textContent).toEqual("10:00");
         });
 });
