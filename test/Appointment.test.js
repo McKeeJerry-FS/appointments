@@ -3,9 +3,18 @@ import { act } from "react";
 import ReactDOM from "react-dom/client";
 import { Appointment } from "../src/Appointment";
 
+let container;
+beforeEach(() => {
+    container = document.createElement("div");
+    document.body.replaceChildren(container);
+});
 // 'DESCRIBE" defines a test suite, which is simply a set of tests with a given name.
 // The first argument is the name odf the unit you are testing, and the second argument is the name of function inside of which you define the test
 describe("Appointment", () => {
+    const render = component =>
+        act(() => {
+            ReactDOM.createRoot(container).render(component);
+        });
     // 'it' defines a singel test
     // 'it' refers to the noun you used to name your test suite
     it("renders the customer first name", () => {
@@ -13,23 +22,19 @@ describe("Appointment", () => {
         const component = (
             <Appointment customer={customer} />
         );
-        const container = document.createElement("div");
-        document.body.appendChild(container);
-        act(() => {
-            ReactDOM.createRoot(container).render(component);
-        });
+        render(<Appointment customer={customer} />);
         // 'expect' is the assertion function that Jest provides to test values
         expect(document.body.textContent).toContain("Ashley");
         // You can read this this expectation in one sentence: "I expect the document.body.textContent to contain the string 'Ashley'". This is the naming convention in Jest tests.
     });
     it("renders another customer's first name", () => {
+      const render = (component) =>
+        act(() => {
+          ReactDOM.createRoot(container).render(component);
+        });
       const customer = { firstName: "Jordan" };
       const component = <Appointment customer={customer} />;
-      const container = document.createElement("div");
-      document.body.appendChild(container);
-      act(() => {
-        ReactDOM.createRoot(container).render(component);
-      });
+      render(<Appointment customer={customer} />);
       expect(document.body.textContent).toContain("Jordan");
       
     });
