@@ -1,7 +1,9 @@
 import React from "react";
 import { act } from "react";
 import ReactDOM from "react-dom/client";
-import { Appointment } from "../src/Appointment";
+import { 
+    Appointment,
+    AppointmentsByDay } from "../src/Appointment";
 
 let container;
 beforeEach(() => {
@@ -39,4 +41,39 @@ describe("Appointment", () => {
       
     });
     // You can now read this test as one complete sentence: "Appointment renders another customer's first name". This is the naming convention in Jest tests.
+});
+
+// AppointmentsByDay
+describe("AppointmentsByDay", () => {
+    let container;
+    beforeEach(() => {
+        container = document.createElement("div");
+        document.body.replaceChildren(container);
+    });
+    const render = component =>
+        act(() => {
+            ReactDOM.createRoot(container).render(component);
+        });
+        // renders the div with the right Id
+        it("renders a div with the right Id", () => {
+            render(<AppointmentsByDay appointments={[]} />);
+            expect(document.querySelector("div#appointmentsDayView")).not.toBeNull();
+        });
+        // renders an ol element to display appointments
+        it("renders an ol element to display appointments", () => {
+            render(<AppointmentsByDay appointments={[]} />);
+            const listElement = document.querySelector("ol");
+            expect(listElement).not.toBeNull();
+        });
+        // renders an li element for each appointment
+        it("renders an li element for each appointment", () => {
+            const today = new Date();
+            const twoAppointments = [
+                { startsAt: today.setHours(12, 0) },
+                { startsAt: today.setHours(13, 0) },
+            ];
+            render(<AppointmentsByDay appointments={twoAppointments} />);
+            const listChildren = document.querySelectorAll("li");
+            expect(listChildren).toHaveLength(2);
+        });
 });
