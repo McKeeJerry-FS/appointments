@@ -73,8 +73,8 @@ describe("AppointmentsByDay", () => {
         it("renders an li element for each appointment", () => {
             const today = new Date();
             const twoAppointments = [
-                { startsAt: today.setHours(12, 0) },
-                { startsAt: today.setHours(13, 0) },
+                { startsAt: today.setHours(12, 0), customer: { firstName: "Ashley" } },
+                { startsAt: today.setHours(13, 0), customer: { firstName: "Jordan" } },
             ];
             render(<AppointmentsByDay appointments={twoAppointments} />);
             const listChildren = document.querySelectorAll("li");
@@ -84,12 +84,41 @@ describe("AppointmentsByDay", () => {
         it("renders a time for each appointment", () => {
             const today = new Date();
             const twoAppointments = [
-                { startsAt: today.setHours(9, 0) },
-                { startsAt: today.setHours(10, 0) },
+                { startsAt: today.setHours(12, 0), customer: { firstName: "Ashley" } },
+                { startsAt: today.setHours(13, 0), customer: { firstName: "Jordan" } },
             ];
             render(<AppointmentsByDay appointments={twoAppointments} />);
             const listChildren = document.querySelectorAll("li");
-            expect(listChildren[0].textContent).toEqual("09:00");
-            expect(listChildren[1].textContent).toEqual("10:00");
+            expect(listChildren[0].textContent).toEqual("12:00");
+            expect(listChildren[1].textContent).toEqual("13:00");
         });
+        // renders a message when there are no appointments
+        it("renders a message saying there are no appointments today", () => {
+            render(<AppointmentsByDay appointments={[]} />);
+            expect(document.body.textContent).toContain("There are no appointments scheduled for today.");  
+        });
+        
+        // selects the first appointment by default
+        it("selects the first appointment by default", () => {
+            const today = new Date();
+            const twoAppointments = [
+                { 
+                    startsAt: today.setHours(12, 0),
+                    customer: { firstName: "Ashley" },
+                },
+                { 
+                    startsAt: today.setHours(13, 0), 
+                    customer: { firstName: "Jordan" } 
+                },
+            ];
+            render(<AppointmentsByDay appointments={twoAppointments} />);
+            expect(document.body.textContent).toContain("Ashley");
+        });
+        // has a button to select each li
+        // it("has a button element in each li", () => {
+        //     render(<AppointmentsByDay appointments />);
+        //     const buttons = document.querySelectorAll("li > button");
+        //     expect(buttons).toHaveLength(2);
+        //     expect(buttons[0].type).toEqual("button");
+        // });
 });
