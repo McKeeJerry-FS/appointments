@@ -2,9 +2,7 @@ import React from "react";
 import { act } from "react";
 import ReactDOM from "react-dom/client";
 import { Appointment, AppointmentsByDay } from "../src/AppointmentsDayView";
-
-
-
+import { initializeReactContainer, render, click } from "./reactTestExtensions";
 
 // 'DESCRIBE" defines a test suite, which is simply a set of tests with a given name.
 // The first argument is the name odf the unit you are testing, and the second argument is the name of function inside of which you define the test
@@ -15,17 +13,9 @@ describe("Appointment", () => {
     phoneNumber: "",
   };
 
-  let container;
-
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.replaceChildren(container);
+    initializeReactContainer();
   });
-
-  const render = (component) =>
-    act(() => {
-      ReactDOM.createRoot(container).render(component);
-    });
 
   const appointmentTable = () => {
     return document.querySelector("#appointmentView > table");
@@ -54,10 +44,6 @@ describe("Appointment", () => {
     // You can read this this expectation in one sentence: "I expect the document.body.textContent to contain the string 'Ashley'". This is the naming convention in Jest tests.
   });
   it("renders another customer's first name", () => {
-    const render = (component) =>
-      act(() => {
-        ReactDOM.createRoot(container).render(component);
-      });
     const customer = { firstName: "Jordan" };
     render(<Appointment customer={customer} />);
     expect(document.body.textContent).toContain("Jordan");
@@ -169,15 +155,11 @@ describe("AppointmentsByDay", () => {
     },
   ];
 
-  let container;
+  
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.replaceChildren(container);
+    initializeReactContainer();
   });
-  const render = (component) =>
-    act(() => {
-      ReactDOM.createRoot(container).render(component);
-    });
+  
   // renders the div with the right Id
   it("renders a div with the right Id", () => {
     render(<AppointmentsByDay appointments={[]} />);
@@ -235,7 +217,7 @@ describe("AppointmentsByDay", () => {
   it("adds a toggle class to the selected appointment's button", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const button = document.querySelectorAll("button")[1];
-    act(() => button.click());
+    click(button);
     expect(button.className).toEqual("toggled");
   });
 
@@ -243,7 +225,7 @@ describe("AppointmentsByDay", () => {
   it("removes the toggle class from the previously selected appointment's button", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const buttons = document.querySelectorAll("button");
-    act(() => buttons[1].click());
+    click(buttons[1]);
     expect(buttons[0].className).not.toEqual("toggled");
   });
 
