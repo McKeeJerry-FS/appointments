@@ -40,6 +40,17 @@ describe("Appointment", () => {
     expect(document.body.textContent).toContain("Jordan");
   });
   // You can now read this test as one complete sentence: "Appointment renders another customer's first name". This is the naming convention in Jest tests.
+  it("renders a customer's last name", () => {
+    const customer = { lastName: "Smith" };
+    render(<Appointment customer={customer} />);
+    expect(document.body.textContent).toContain("Smith");
+  });
+
+  it("renders another customer's last name", () => {
+    const customer = { lastName: "Johnson" };
+    render(<Appointment customer={customer} />);
+    expect(document.body.textContent).toContain("Johnson");
+  });
 });
 
 // AppointmentsByDay

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-export const Appointment = ({ customer }) => (
-    <div>{customer.firstName}</div>
-);
+
 
 const appointmentTimeOfDay = (startsAt) => {
     const [h, m] = new Date(startsAt).toTimeString().split(":");
     return `${h}:${m}`;
 };
+
+export const Appointment = ({ customer }) => <div>{customer.firstName} {customer.lastName}</div>;
 
 export const AppointmentsByDay = ({ appointments }) => {
     const [selectedAppointment, setSelectedAppointment] = useState(0);
