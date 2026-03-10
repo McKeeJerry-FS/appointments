@@ -2,7 +2,15 @@ import React from "react";
 import { act } from "react";
 import ReactDOM from "react-dom/client";
 import { Appointment, AppointmentsByDay } from "../src/AppointmentsDayView";
-import { initializeReactContainer, render, click } from "./reactTestExtensions";
+import {
+  initializeReactContainer,
+  render,
+  click,
+  element,
+  elements,
+  typesOf,
+  textOf,
+} from "./reactTestExtensions";
 
 // 'DESCRIBE" defines a test suite, which is simply a set of tests with a given name.
 // The first argument is the name odf the unit you are testing, and the second argument is the name of function inside of which you define the test
@@ -18,11 +26,11 @@ describe("Appointment", () => {
   });
 
   const appointmentTable = () => {
-    return document.querySelector("#appointmentView > table");
+    return element("#appointmentView > table");
   };
 
   const appointmentHeader = () => {
-    return document.querySelector("#appointmentView > h3");
+    return element("#appointmentView > h3");
   };
   // 'it' defines a singel test
   // 'it' refers to the noun you used to name your test suite
@@ -166,15 +174,17 @@ describe("AppointmentsByDay", () => {
     initializeReactContainer();
   });
 
+  const secondButton = () => elements("button")[1];
+
   // renders the div with the right Id
   it("renders a div with the right Id", () => {
     render(<AppointmentsByDay appointments={[]} />);
-    expect(document.querySelector("div#appointmentsDayView")).not.toBeNull();
+    expect(element("div#appointmentsDayView")).not.toBeNull();
   });
   // renders an ol element to display appointments
   it("renders an ol element to display appointments", () => {
     render(<AppointmentsByDay appointments={[]} />);
-    const listElement = document.querySelector("ol");
+    const listElement = element("ol");
     expect(listElement).not.toBeNull();
   });
   // renders an li element for each appointment
@@ -207,31 +217,30 @@ describe("AppointmentsByDay", () => {
   it("has a button element in each li", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const buttons = document.querySelectorAll("li > button");
-    expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toContainText("12:00");
+    expect(typesOf(elements("li > *"))).toEqual(["button", "button"]);
   });
 
   // renders another appointment when selected
   it("renders another appointment when selected", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
-    const button = document.querySelectorAll("button")[1];
-    act(() => button.click());
+    //const button = document.querySelectorAll("button")[1];
+    click(secondButton());
     expect(document.body).toContainText("Jordan");
   });
 
   // adds a toggle class to the selected appointment's button
   it("adds a toggle class to the selected appointment's button", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
-    const button = document.querySelectorAll("button")[1];
-    click(button);
-    expect(button.className).toContain("toggled");
+    //const button = document.querySelectorAll("button")[1];
+    click(secondButton());
+    expect(secondButton().className).toContain("toggled");
   });
 
   // removes the toggle class from the previously selected appointment's button
   it("removes the toggle class from the previously selected appointment's button", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
-    const buttons = document.querySelectorAll("button");
-    click(buttons[1]);
-    expect(buttons[0].className).not.toContain("toggled");
+    //const buttons = document.querySelectorAll("button");
+    click(secondButton());
+    expect(elements("button")[0].className).not.toContain("toggled");
   });
 });
