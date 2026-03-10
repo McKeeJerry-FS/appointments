@@ -233,7 +233,7 @@ describe("AppointmentsByDay", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
     //const button = document.querySelectorAll("button")[1];
     click(secondButton());
-    expect(secondButton().className).toContain("toggled");
+    expect(secondButton()).toHaveClass("toggled");
   });
 
   // removes the toggle class from the previously selected appointment's button
@@ -241,6 +241,6 @@ describe("AppointmentsByDay", () => {
     render(<AppointmentsByDay appointments={twoAppointments} />);
     //const buttons = document.querySelectorAll("button");
     click(secondButton());
-    expect(elements("button")[0].className).not.toContain("toggled");
+    expect(elements("button")[0]).not.toHaveClass("toggled");
   });
 });
