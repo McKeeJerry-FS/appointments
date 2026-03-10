@@ -1,7 +1,7 @@
 import React from "react";
 import { act } from "react";
 import ReactDOM from "react-dom/client";
-import { Appointment, AppointmentsByDay } from "../src/Appointment";
+import { Appointment, AppointmentsByDay } from "../src/AppointmentsDayView";
 
 let container;
 beforeEach(() => {
