@@ -30,11 +30,20 @@ describe("Appointment", () => {
   const appointmentTable = () => {
     return document.querySelector("#appointmentView > table");
   };
+
+  const appointmentHeader = () => {
+    return document.querySelector("#appointmentView > h3");
+  };
   // 'it' defines a singel test
   // 'it' refers to the noun you used to name your test suite
   it("renders a table", () => {
     render(<Appointment customer={blankCustomer} />);
     expect(appointmentTable()).not.toBeNull();
+  });
+
+  it("renders an h3 element", () => {
+    render(<Appointment customer={blankCustomer} />);
+    expect(appointmentHeader()).not.toBeNull();
   });
 
   it("renders the customer first name", () => {
@@ -50,7 +59,6 @@ describe("Appointment", () => {
         ReactDOM.createRoot(container).render(component);
       });
     const customer = { firstName: "Jordan" };
-    const component = <Appointment customer={customer} />;
     render(<Appointment customer={customer} />);
     expect(document.body.textContent).toContain("Jordan");
   });
@@ -132,10 +140,35 @@ describe("Appointment", () => {
                         />);
     expect(appointmentTable().textContent).toContain("This is another note about the customer's appointment.");
   });
+
+  // renders a time as the appointment heading
+  it("renders the appointment time as the heading", () => {
+    const today = new Date();
+    const appointmentTime = today.setHours(14, 0);
+    render(<Appointment customer={blankCustomer} 
+                        stylist="Sam" 
+                        service="Cut" 
+                        notes="This is a note about the customer's appointment." 
+                        startsAt={appointmentTime}
+                        />);
+    expect(appointmentHeader().textContent).toEqual("Today's appointment at 14:00");
+  });
 });
 
 // AppointmentsByDay
 describe("AppointmentsByDay", () => {
+  const today = new Date();
+  const twoAppointments = [
+    {
+      startsAt: today.setHours(12, 0),
+      customer: { firstName: "Ashley" },
+    },
+    {
+      startsAt: today.setHours(13, 0),
+      customer: { firstName: "Jordan" },
+    },
+  ];
+
   let container;
   beforeEach(() => {
     container = document.createElement("div");
@@ -158,22 +191,12 @@ describe("AppointmentsByDay", () => {
   });
   // renders an li element for each appointment
   it("renders an li element for each appointment", () => {
-    const today = new Date();
-    const twoAppointments = [
-      { startsAt: today.setHours(12, 0), customer: { firstName: "Ashley" } },
-      { startsAt: today.setHours(13, 0), customer: { firstName: "Jordan" } },
-    ];
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const listChildren = document.querySelectorAll("li");
     expect(listChildren).toHaveLength(2);
   });
   // renders a human readable time for each appointment
   it("renders a time for each appointment", () => {
-    const today = new Date();
-    const twoAppointments = [
-      { startsAt: today.setHours(12, 0), customer: { firstName: "Ashley" } },
-      { startsAt: today.setHours(13, 0), customer: { firstName: "Jordan" } },
-    ];
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const listChildren = document.querySelectorAll("li");
     expect(listChildren[0].textContent).toEqual("12:00");
@@ -189,33 +212,11 @@ describe("AppointmentsByDay", () => {
 
   // selects the first appointment by default
   it("selects the first appointment by default", () => {
-    const today = new Date();
-    const twoAppointments = [
-      {
-        startsAt: today.setHours(12, 0),
-        customer: { firstName: "Ashley" },
-      },
-      {
-        startsAt: today.setHours(13, 0),
-        customer: { firstName: "Jordan" },
-      },
-    ];
     render(<AppointmentsByDay appointments={twoAppointments} />);
     expect(document.body.textContent).toContain("Ashley");
   });
   // has a button to select each li
   it("has a button element in each li", () => {
-    const today = new Date();
-    const twoAppointments = [
-      {
-        startsAt: today.setHours(12, 0),
-        customer: { firstName: "Ashley" },
-      },
-      {
-        startsAt: today.setHours(13, 0),
-        customer: { firstName: "Jordan" },
-      },
-    ];
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const buttons = document.querySelectorAll("li > button");
     expect(buttons).toHaveLength(2);
@@ -224,20 +225,26 @@ describe("AppointmentsByDay", () => {
 
   // renders another appointment when selected
   it("renders another appointment when selected", () => {
-    const today = new Date();
-    const twoAppointments = [
-      {
-        startsAt: today.setHours(12, 0),
-        customer: { firstName: "Ashley" },
-      },
-      {
-        startsAt: today.setHours(13, 0),
-        customer: { firstName: "Jordan" },
-      },
-    ];
     render(<AppointmentsByDay appointments={twoAppointments} />);
     const button = document.querySelectorAll("button")[1];
     act(() => button.click());
     expect(document.body.textContent).toContain("Jordan");
   });
+
+  // adds a toggle class to the selected appointment's button
+  it("adds a toggle class to the selected appointment's button", () => {
+    render(<AppointmentsByDay appointments={twoAppointments} />);
+    const button = document.querySelectorAll("button")[1];
+    act(() => button.click());
+    expect(button.className).toEqual("toggled");
+  });
+
+  // removes the toggle class from the previously selected appointment's button
+  it("removes the toggle class from the previously selected appointment's button", () => {
+    render(<AppointmentsByDay appointments={twoAppointments} />);
+    const buttons = document.querySelectorAll("button");
+    act(() => buttons[1].click());
+    expect(buttons[0].className).not.toEqual("toggled");
+  });
+
 });
