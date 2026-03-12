@@ -1,5 +1,5 @@
 import React from 'react';
-import { initializeReactContainer, render, element, form } from '../test/reactTestExtensions';
+import { initializeReactContainer, render, element, form, field } from '../test/reactTestExtensions';
 import { CustomerForm } from '../src/CustomerForm';
 
 describe('CustomerForm', () => {
@@ -20,16 +20,22 @@ describe('CustomerForm', () => {
   // Test for rendering the first name input field
   it('renders a first name input field', () => {
     render(<CustomerForm original={blankCustomer} />);
-    const field = form().elements.firstName;
-    expect(field).not.toBeNull();
-    expect(field.tagName).toEqual('INPUT');
-    expect(field.type).toBe('text');
+    //const field = form().elements.firstName;
+    expect(field('firstName')).not.toBeNull();
+    expect(field('firstName').tagName).toEqual('INPUT');
+    expect(field('firstName').type).toBe('text');
   });
 
   it('includes the existing value for the first name', () => {
     const customer = { firstName: 'Ashley' };
     render(<CustomerForm original={customer} />);
-    const field = form().elements.firstName;
-    expect(field.value).toEqual('Ashley');
+    expect(field('firstName').value).toEqual('Ashley');
+  });
+
+  it('renders a label for the first name field', () => {
+    render(<CustomerForm original={blankCustomer} />);
+    const label = element('label[for="firstName"]');
+    expect(label).not.toBeNull();
+    expect(label.textContent).toMatch(/first\s*name/i);
   });
 })
